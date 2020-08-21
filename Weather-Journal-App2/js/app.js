@@ -9,25 +9,30 @@ let newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
 let baseURL = 'https://api.openweathermap.org/data/2.5/weather?'
 let apiKey = '&appid=9fe283a5194cb33e8da39dbddb884ba33';
 
+const zipCode = document.getElementById('zip').value;
+
 // Event listener to add function to existing HTML DOM element
 
 document.getElementById('generate').addEventListener('click', performAction);
 
 /* Function called by event listener */
 function performAction(e){
-    const weather = async(baseURL, zipCode, apiKey) => {
-        const request = await fetch(baseURL+zipCode+apiKey)
-        .then(function(data) {
-            postData('/all'. postData);
-            UpdateUI()
-        })
-        try {
-            const allData = await request.json()
-        } catch(error) {
-            console.error("error", error);
-        }
-    };
+    getWeatherData(baseURL, zipCode, apiKey)
 }
+
+const getWeatherData = async(baseURL, zipCode, apiKey) => {
+    const request = await fetch(baseURL+zipCode+apiKey)
+    .then(function(data) {
+        postData('/all'. postData);
+        UpdateUI()
+    })
+    try {
+        const allData = await request.json()
+    } catch(error) {
+        console.error("error", error);
+    }
+};
+
 
 const postData = async (url = '', data = {}) => {
     const response = await fetch(url, {
