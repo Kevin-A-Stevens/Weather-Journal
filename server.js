@@ -26,24 +26,33 @@ const server = app.listen(port, listening);
     console.log(`running on localhost: ${port}`);
   };
 
-app.get('/all', sendData)
 
-function sendData (req, res) {
+app.post('/database', (req, res) => {
+  const { temp, currentTime } = req.body.main;
+  const returnedcurrentDate = currentTime;
+  const returnedTemp = `${temp}°C`;
+  const feelings = feelsLike;
+  const humidity = humidity;
+  const windSpeed = windSpeed;
+  const timeZone = tzName;
+  const content = description;
+  
+  projectData.data.push({
+    currentDate: returnedcurrentDate,
+    temperature: returnedTemp,
+    feelsLike: feelings,
+    humidity: humidity,
+    windSpeed: windSpeed,
+    timeZone: timeZone,
+    content: content,
+  });
+
   res.send(projectData);
-};
+});
 
-app.post('/add', callBack);
+app.get('/all', (req, res) => {
+  res.send(projectData);
+});
 
-function callBack(req, res) {
-  res.send('POST received');
-};
-
-const data = [];
-
-app.post('/postData', postData);
-
-function postData(req, res) {
-  data.push(req.body);
-};
 
 
