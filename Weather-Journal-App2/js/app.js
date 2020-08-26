@@ -6,10 +6,8 @@ let newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
 
 // Personal API Key for OpenWeatherMap API
 
-let baseURL = 'https://api.openweathermap.org/data/2.5/weather?'
-// let apiKey = '&appid=9fe283a5194cb33e8da39dbddb884ba33';
-let apiKey = '9fe283a5194cb33e8da39dbddb884ba33';
-
+let baseURL = 'https://api.openweathermap.org/data/2.5/weather?zip='
+let apiKey = '&appid=9fe283a5194cb33e8da39dbddb884ba33';
 
 // Event listener to add function to existing HTML DOM element
 
@@ -25,7 +23,6 @@ const getWeatherData = async(baseURL, zipCode, apiKey) => {
     const feelings = document.getElementById('feelings').value;
     getWeatherData(baseURL,zipCode,apiKey)
     .then(function(data) {
-        console.log(data);
         postData('/postData',data)
     }).then(function() {
         UpdateUI();
@@ -51,10 +48,9 @@ const postData = async (url = '', data = {}) => {
 };
 
 const GetWeather = async (baseURL, zipCode, apiKey) => {
-    const res = await fetch(baseURL+zipCode+apiKey);
+    const res = await fetch(baseURL + zipCode + apiKey);
     try {
         const data = await res.json();
-        console.log(data);
         return data;
         // We can do something else with our returned data here
       } catch(error) {
