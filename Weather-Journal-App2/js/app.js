@@ -7,7 +7,7 @@ let newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
 // Personal API Key for OpenWeatherMap API
 
 let baseURL = 'https://api.openweathermap.org/data/2.5/weather?zip='
-let apiKey = '&appid=9fe283a5194cb33e8da39dbddb884ba33';
+let apiKey = '&appid=fe283a5194cb33e8da39dbddb884ba33';
 
 // Event listener to add function to existing HTML DOM element
 
@@ -16,64 +16,69 @@ document.getElementById('generate').addEventListener('click', performAction);
 /* Function called by event listener */
 function performAction(e){
     const zipCode = document.getElementById('zip').value;
-    getWeatherData(baseURL, zipCode, apiKey)
-}
-
-const getWeatherData = async(baseURL, zipCode, apiKey) => {
     const feelings = document.getElementById('feelings').value;
-    getWeatherData(baseURL,zipCode,apiKey)
+    getWeatherData(baseURL, zipCode, apiKey)
     .then(function(data) {
-        postData('/postData',data)
-    }).then(function() {
-        UpdateUI();
+        postData('/add', {
+            // temperature: temperature,
+            date: d,
+            feelings: feelings,
+            humidity: humidity,
+            windSpeed: windSpeed,
+            // tzName: timezone,
+            description: content
+        });
+        UpdateUI('/');
     })
 };
 
+/* GET Web API data */
+const getWeatherData = async(baseURL, zipCode, apiKey) => {
+    const response = await fetch(baseURL + zipCode + apiKey);
+    try {
+        const data = await response.json();
+        return data;
+    } catch(error) {
+        console.error('error', error);
+    };
+};
 
+/* POST Web API data*/
 const postData = async (url = '', data = {}) => {
     const response = await fetch(url, {
         method: 'POST',
         credentials: 'same-origin',
         headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json'
         },
         body: JSON.stringify(data),
     });
+
     try {
         const newData = await response.json();
         return newData;
     } catch(error) {
         console.error("error", error);
-    }
+    };
 };
 
-const GetWeather = async (baseURL, zipCode, apiKey) => {
-    const res = await fetch(baseURL + zipCode + apiKey);
+/* UpdateUI function */
+const UpdateUI = async (url='') => {
+    const request = await fetch(url);
     try {
-        const data = await res.json();
-        return data;
-        // We can do something else with our returned data here
+        const allData = await res.json();
+        document.getElementById('date').innerHTML = allData[0].d;
+        document.getElementById('temp').innerHTML = allData[0].temperature;
+        document.getElementById('feelsLike').innerHTML = allData[0].feelslike;
+        document.getElementById('humidity').innerHTML = allData[0].humidity;
+        document.getElementById('windSpeed').innerHTML = allData[0].windSpeed;
+        document.getElementById('tzName').innerHTML = allData[0].tzName;
+        document.getElementById('content').innerHTML = allData[0].description;
       } catch(error) {
         console.error("error", error);
-      }
-    }
-
-    const UpdateUI = async () => {
-        const request = await fetch('/all')
-        try {
-          const allData = await request.json()
-          console.log(allData);
-          document.getElementById('date').innerHTML = 'Date: ' + allData.d;
-          document.getElementById('temp').innerHTML = 'Temperature: ' + allData.temperature;
-          document.getElementById('feelsLike').innerHTML = 'Comment: ' + allData.feeling;
-          document.getElementById('humidity').innerHTML = 'Humidity: ' + allData.humidity;
-          document.getElementById('windSpeed').innerHTML = 'Wind Speed: ' + allData.windSpeed;
-          document.getElementById('tzName').innerHTML = 'Time Zone: ' + allData.tzName;
-          document.getElementById('content').innerHTML = 'Description: ' + allData.description;
-        }catch(error) {
-          console.log("error", error)
-        }
-      }
+      };
+    };
 
 
 /* Function to GET Web API Data*/
