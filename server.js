@@ -1,5 +1,5 @@
 /* Empty JS object to act as endpoint for all routes */
-projectData = {};
+const projectData = {};
 
 /* Express to run server and routes */
 const express = require('express');
@@ -26,32 +26,25 @@ const server = app.listen(port, listening);
     console.log(`running on localhost: ${port}`);
   };
 
-
-app.post('/database', (req, res) => {
-  const { temp, currentTime } = req.body.main;
-  const returnedcurrentDate = currentTime;
-  const returnedTemp = `${temp}°C`;
-  const feelings = feelsLike;
-  const humidity = humidity;
-  const windSpeed = windSpeed;
-  const timeZone = tzName;
-  const content = description;
-  
-  projectData.data.push({
-    currentDate: returnedcurrentDate,
-    temperature: returnedTemp,
-    feelsLike: feelings,
-    humidity: humidity,
-    windSpeed: windSpeed,
-    timeZone: timeZone,
-    content: content,
-  });
-
-  res.send(projectData);
+// GET route requests
+app.get('/', function (request, response) {
+  response.send(projectData);
 });
 
-app.get('/all', (req, res) => {
-  res.send(projectData);
+// POST route
+app.post('/add', function (request, response) {
+  newData = {
+    temperature: request.body.temperature,
+    date: request.body.date,
+    feelings: request.body.feelings,
+    feelslike: request.body.feelsLike,
+    humidity: request.body.humidity,
+    windSpeed: request.body.windSpeed,
+    timeZone: request.body.tzName,
+    content: request.body.description
+  };
+
+  projectData.unshift(newData);
 });
 
 
