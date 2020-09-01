@@ -7,7 +7,7 @@ let newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
 // Personal API Key for OpenWeatherMap API
 
 let baseURL = 'https://api.openweathermap.org/data/2.5/weather?zip='
-let apiKey = '&appid=********************************';
+let apiKey = '&appid=fe283a5194cb33e8da39dbddb884ba33';
 
 // Event listener to add function to existing HTML DOM element
 
@@ -19,15 +19,16 @@ function performAction(e){
     const feelings = document.getElementById('feelings').value;
     getWeatherData(baseURL, zipCode, apiKey)
     .then(function(data) {
-        postData('/add', {
-            // temperature: temperature,
+        postData('http://localhost:3000/add', {
+            temperature: data.main.temp,
             date: d,
             feelings: feelings,
             humidity: humidity,
             windSpeed: windSpeed,
             // tzName: timezone,
             description: content
-        });
+        })
+        .then
         UpdateUI('/');
     })
 };
